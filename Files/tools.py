@@ -2,8 +2,7 @@ import requests
 import json
 from config import Protocols, check_node
 import base64
-from os import path
-import socket
+from os import path, makedirs
 
 
 class CheckHost(Protocols):
@@ -105,6 +104,7 @@ class CheckHost(Protocols):
 
 def save(network: Protocols, save_path: str = None) -> bool:
     save_path = save_path if save_path is not None else './hub/'
+    makedirs(save_path, exist_ok=True)  # ایجاد پوشه اگه وجود نداره
     
     with open(path.join(save_path, 'ss.txt'), 'w') as fli:
         for link in network.ss:
@@ -134,6 +134,7 @@ def save(network: Protocols, save_path: str = None) -> bool:
 
 def save_b64(network: Protocols, save_path: str = None) -> bool:
     save_path = save_path if save_path is not None else './hub/'
+    makedirs(save_path, exist_ok=True)  # ایجاد پوشه اگه وجود نداره
 
     ss_b64 = ''
     vmess_b64 = ''
@@ -273,6 +274,7 @@ def get_country(network: Protocols):
             self.data = data
 
         def save(self, save_path: str = './hub/'):
+            makedirs(save_path, exist_ok=True)  # ایجاد پوشه اگه وجود نداره
             for _country in self.data.keys():
                 flag = country_flags.get(_country, '❓')  # پرچم پیش‌فرض
                 file_name = f'{flag}_{_country}.txt'  # اضافه کردن پرچم به نام فایل
@@ -282,7 +284,7 @@ def get_country(network: Protocols):
 
         def print(self):
             """چاپ کد کشورها با پرچم"""
-            return [f'{country_flags.get(country, "❓")} {color}' for color in self.data.keys()]
+            return [f'{country_flags.get(color, "❓")} {color}' for color in self.data.keys()]
 
         def count(self):
             return len(self.data.keys())
